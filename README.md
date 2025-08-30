@@ -19,6 +19,8 @@ Primer_Ejercicio_Habi/
 ├── microservicio_consulta/
 │   ├── servicio_consulta.py         # Código Python del microservicio de consulta
 │   ├── test_servicio_consulta.py    # Pruebas unitarias TDD
+|   ├── bd_habi.py                   # Código con la conexión y el metodo para obtener los inmuebles de BD de habi
+|   ├── config_bd.py                 # Código con los datos de conexión a la BD de habi
 │   └── filtros_entrada.json         # Ejemplo de JSON con filtros de front-end
 │
 ├── microservicio_me_gusta/
