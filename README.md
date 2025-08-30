@@ -18,21 +18,22 @@ Este proyecto forma parte de la prueba técnica para Habi y consta de dos puntos
 Primer_Ejercicio_Habi/
 │
 ├── microservicio_consulta/
-│   ├── servicio_consulta.py
-│   ├── test_servicio_consulta.py
-│   ├── bd_habi.py
-│   ├── config_bd.py
-│   └── filtros_entrada.json
+│   ├── servicio_consulta.py         # Código Python del microservicio de consulta
+│   ├── test_servicio_consulta.py    # Pruebas unitarias TDD
+│   ├── bd_habi.py                   # Código con la conexión y el método para obtener los inmuebles de BD de Habi
+│   ├── config_bd.py                 # Código con los datos de conexión a la BD de Habi
+│   └── filtros_entrada.json         # Ejemplo de JSON con filtros de front-end
 │
 ├── microservicio_me_gusta/
-│   ├── tabla_me_gusta.sql
-│   ├── test_servicio_me_gusta.py
-│   ├── diagrama_ERD.png
-│   ├── agregar_me_gusta.sql
-│   ├── me_gusta_entrada.json
-│   └── me_gusta_salida.json
+│   ├── tabla_me_gusta.sql           # SQL de creación de tabla y relaciones
+│   ├── test_servicio_me_gusta.py    # Test teórico para probar el servicio me gusta
+│   ├── diagrama_ERD.png             # Diagrama de Entidad-Relación conceptual
+│   ├── agregar_me_gusta.sql         # Consulta SQL que agrega un me gusta
+│   ├── me_gusta_entrada.json        # JSON con la entrada de información del front
+│   └── me_gusta_salida.json         # JSON con la salida de información generada por el microservicio
 │
 └── README.md
+
 ```
 
 ---
