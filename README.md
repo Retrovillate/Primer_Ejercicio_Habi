@@ -14,7 +14,7 @@ Este proyecto forma parte de la prueba técnica para Habi. La prueba se compone 
 
 ## Estructura del proyecto
 ```
-habi_prueba/
+Primer_Ejercicio_Habi/
 │
 ├── microservicio_consulta/
 │   ├── servicio_consulta.py         # Código Python del microservicio de consulta
