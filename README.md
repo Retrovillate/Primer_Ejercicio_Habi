@@ -24,8 +24,12 @@ Primer_Ejercicio_Habi/
 │   └── filtros_entrada.json         # Ejemplo de JSON con filtros de front-end
 │
 ├── microservicio_me_gusta/
-│   ├── modelo_me_gusta.sql          # SQL de creación de tabla y relaciones
+│   ├── tabla_me_gusta.sql           # SQL de creación de tabla y relaciones
+|   └── test_servicio_me_gusta.py    # Test teorico para probar el servicio me gusta
 │   └── diagrama_ERD.png             # Diagrama de Entidad-Relación conceptual
+|   └── agregar_me_gusta.sql         # Consulta SQL que agrega un me gusta
+|   └── me_gusta_entrada.json        # Json con la entra de información del front
+|   └── me_gusta_salida.json         # Json con la salida de información realizando por el microservicio
 │
 └── README.md
 ```
