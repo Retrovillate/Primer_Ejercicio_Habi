@@ -1,0 +1,67 @@
+# Vamos a crear un archivo .txt que explique los parámetros y diferentes invocaciones del servicio.
+
+contenido = """\
+Servicio REST: consultar_inmuebles
+
+Descripción:
+-------------
+Este servicio permite consultar inmuebles con filtros opcionales por ciudad, año de construcción y estado. 
+Es obligatorio enviar al menos uno de estos tres parámetros, y sus valores no pueden ser vacíos.
+
+URL base:
+----------
+http://localhost:8080/consultar_inmuebles
+
+Parámetros (en consulta GET como query params):
+-----------------------------------------------
+
+1. ciudad (opcional, pero no puede ser vacío si se envía)
+   - Filtra inmuebles en la ciudad especificada.
+   - Ejemplo válido: ciudad=medellin
+   - Ejemplo inválido: ciudad=   (vacío)
+
+2. ano_construccion (opcional, pero no puede ser vacío si se envía)
+   - Filtra inmuebles construidos en el año especificado.
+   - Debe ser un número entero.
+   - Ejemplo válido: ano_construccion=2002
+   - Ejemplo inválido: ano_construccion=   (vacío o no numérico)
+
+3. estado (opcional, pero no puede ser vacío si se envía)
+   - Filtra inmuebles por su estado actual.
+   - Puede contener múltiples valores separados por coma.
+   - Valores permitidos: pre_venta, en_venta, vendido
+   - Ejemplo válido: estado=pre_venta,vendido
+   - Ejemplo inválido: estado=   (vacío) o estado=desconocido
+
+Respuesta:
+-----------
+- Status HTTP 200 con la lista de inmuebles filtrados.
+- Status HTTP 400 si:
+  * No se envía al menos un parámetro.
+  * Algún parámetro enviado tiene valor vacío.
+  * Se envían valores no válidos para estado.
+  * ano_construccion no es un número entero.
+
+Ejemplos de invocación:
+------------------------
+1. Filtrar por ciudad únicamente:
+   http://localhost:8080/consultar_inmuebles?ciudad=bogota
+
+2. Filtrar por año de construcción únicamente:
+   http://localhost:8080/consultar_inmuebles?ano_construccion=2020
+
+3. Filtrar por estado (uno o varios):
+   http://localhost:8080/consultar_inmuebles?estado=pre_venta
+   http://localhost:8080/consultar_inmuebles?estado=pre_venta,vendido
+
+4. Filtrar combinando ciudad y año:
+   http://localhost:8080/consultar_inmuebles?ciudad=medellin&ano_construccion=2002
+
+5. Filtrar usando los tres parámetros:
+   http://localhost:8080/consultar_inmuebles?ciudad=medellin&ano_construccion=2002&estado=pre_venta,vendido
+
+Notas:
+-------
+- Si se envía un parámetro con valor vacío, se devuelve un error.
+- Debe enviarse al menos un parámetro con valor válido.
+"""
