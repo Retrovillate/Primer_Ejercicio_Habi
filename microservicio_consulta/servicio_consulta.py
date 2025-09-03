@@ -15,55 +15,44 @@ class ServicioConsulta(BaseHTTPRequestHandler):
 
     def do_GET(self):
         if self.path.startswith("/consultar_inmuebles"):
-            # Extraer parámetros conservando valores vacíos
             query = urlparse(self.path).query
             params = parse_qs(query, keep_blank_values=True)
             filtros = {}
 
             try:
-                # Debe venir al menos UNO de los 3 con valor NO vacío
-                tiene_valor = False
-                for clave in ["ciudad", "ano_construccion", "estado"]:
-                    if clave in params and any(v.strip() for v in params[clave] if v is not None):
-                        tiene_valor = True
-                        break
-                if not tiene_valor:
-                    raise ValueError(
-                        "Debe enviar al menos uno de los parámetros con valor: 'ciudad', 'ano_construccion' o 'estado'."
-                    )
+                # --- Si hay parámetros, validar que ninguno esté vacío ---
+                if params:
+                    # ciudad
+                    if 'ciudad' in params:
+                        ciudad = (params['ciudad'][0] or "").strip()
+                        if ciudad == "":
+                            raise ValueError("El parámetro 'ciudad' está vacío. Debe ingresar un valor.")
+                        filtros['ciudad'] = ciudad
 
-                # Validar ciudad (si existe)
-                if 'ciudad' in params:
-                    ciudad = (params['ciudad'][0] or "").strip()
-                    if ciudad == "":
-                        raise ValueError("El parámetro 'ciudad' está vacío. Debe ingresar un valor para la consulta.")
-                    filtros['ciudad'] = ciudad
+                    # año construcción
+                    if 'ano_construccion' in params:
+                        valor_ano = (params['ano_construccion'][0] or "").strip()
+                        if valor_ano == "":
+                            raise ValueError("El parámetro 'ano_construccion' está vacío. Debe ingresar un valor.")
+                        try:
+                            filtros['ano_construccion'] = int(valor_ano)
+                        except ValueError:
+                            raise ValueError("El parámetro 'ano_construccion' debe ser un número entero.")
 
-                # Validar año de construcción (si existe)
-                if 'ano_construccion' in params:
-                    valor_ano = (params['ano_construccion'][0] or "").strip()
-                    if valor_ano == "":
-                        raise ValueError("El parámetro 'ano_construccion' está vacío. Debe ingresar un valor para la consulta.")
-                    try:
-                        filtros['ano_construccion'] = int(valor_ano)
-                    except ValueError:
-                        raise ValueError("El parámetro 'ano_construccion' debe ser un número entero.")
+                    # estado
+                    if 'estado' in params:
+                        valor_estado = (params['estado'][0] or "").strip()
+                        if valor_estado == "":
+                            raise ValueError("El parámetro 'estado' está vacío. Debe ingresar un valor.")
+                        estados = [e.strip() for e in valor_estado.split(',')]
+                        if any(e == "" for e in estados):
+                            raise ValueError("El parámetro 'estado' contiene valores vacíos.")
+                        for est in estados:
+                            if est not in ESTADOS_VALIDOS:
+                                raise ValueError(f"Estado inválido: {est}. Debe ser uno de {ESTADOS_VALIDOS}")
+                        filtros['estado'] = estados
 
-                # Validar estado (si existe)
-                if 'estado' in params:
-                    valor_estado = (params['estado'][0] or "")
-                    if valor_estado.strip() == "":
-                        raise ValueError("El parámetro 'estado' está vacío. Debe ingresar un valor para la consulta.")
-                    # separar por comas y eliminar espacios; prohibir elementos vacíos
-                    estados = [e.strip() for e in valor_estado.split(',')]
-                    if any(e == "" for e in estados):
-                        raise ValueError("El parámetro 'estado' contiene valores vacíos. Use valores válidos separados por comas.")
-                    for est in estados:
-                        if est not in ESTADOS_VALIDOS:
-                            raise ValueError(f"Estado inválido: {est}. Debe ser uno de {ESTADOS_VALIDOS}")
-                    filtros['estado'] = estados
-
-                # Obtener resultados desde la base de datos
+                # --- Obtener resultados ---
                 resultados = bd.obtener_inmuebles(filtros)
 
                 # Traducir variables al español
@@ -82,7 +71,6 @@ class ServicioConsulta(BaseHTTPRequestHandler):
                         )
                     })
 
-                # Responder
                 self._set_headers()
                 self.wfile.write(json.dumps({"inmuebles": resultados_traducidos}, ensure_ascii=False).encode('utf-8'))
 
