@@ -22,12 +22,14 @@ Primer_Ejercicio_Habi/
 │   ├── test_servicio_consulta.py    # Pruebas unitarias TDD
 │   ├── bd_habi.py                   # Código con la conexión y el método para obtener los inmuebles de BD de Habi
 │   ├── config_bd.py                 # Código con los datos de conexión a la BD de Habi
-│   └── filtros_entrada.json         # Ejemplo de JSON con filtros de front-end
+│   └── filtros_entrada.txt          # Ejemplo de diferentes invocaciones que recibiria del front el servicio
+│   └── inmuebles_salida.json        # Ejemplo de un response en JSON del proceso que hace el servicio
+
 │
 ├── microservicio_me_gusta/
 │   ├── tabla_me_gusta.sql           # SQL de creación de tabla y relaciones
 │   ├── test_servicio_me_gusta.py    # Test teórico para probar el servicio me gusta
-│   ├── diagrama_ERD.png             # Diagrama de Entidad-Relación conceptual
+│   ├── diagrama_ERD_Final.png       # Diagrama de Entidad-Relación conceptual
 │   ├── agregar_me_gusta.sql         # Consulta SQL que agrega un me gusta
 │   ├── me_gusta_entrada.json        # JSON con la entrada de información del front
 │   └── me_gusta_salida.json         # JSON con la salida de información generada por el microservicio
@@ -56,13 +58,36 @@ Primer_Ejercicio_Habi/
 - Manejar inconsistencias en la base de datos.
 - Retornar información del inmueble: Dirección, Ciudad, Estado, Precio, Descripción.
 
-### Ejemplo de entrada JSON
+### Ejemplo de entrada params
+Archivo: `filtros_entrada.json`
+```txt
+http://localhost:8080/consultar_inmuebles?ciudad=medellin&ano_construccion=2002&estado=pre_venta,vendido
+```
+
+### Ejemplo de salida JSON
 Archivo: `filtros_entrada.json`
 ```json
 {
-    "ciudad": "Bogotá",
-    "ano_construccion": 2018,
-    "estado": ["pre_venta", "en_venta"]
+    "inmuebles": [
+        {
+            "direccion": "calle 23 #45-67",
+            "ciudad": "medellin",
+            "estado": "pre_venta",
+            "descripcion_estado": "Inmueble publicado en preventa",
+            "precio_venta": 210000000,
+            "ano_construccion": 2002,
+            "fecha_actualizacion": "2021-04-12 22:23:56"
+        },
+        {
+            "direccion": "calle 23 #45-67r",
+            "ciudad": "medellin",
+            "estado": "pre_venta",
+            "descripcion_estado": "Inmueble publicado en preventa",
+            "precio_venta": 210000000,
+            "ano_construccion": 2002,
+            "fecha_actualizacion": "2021-04-10 13:24:56"
+        }
+    ]
 }
 ```
 
@@ -96,11 +121,11 @@ CREATE TABLE me_gusta (
     fecha_creacion DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_me_gusta_usuario
         FOREIGN KEY (usuario_id)
-        REFERENCES usuarios(id)
+        REFERENCES auth_user(id)
         ON DELETE CASCADE,
     CONSTRAINT fk_me_gusta_inmueble
         FOREIGN KEY (inmueble_id)
-        REFERENCES inmuebles(id)
+        REFERENCES property(id)
         ON DELETE CASCADE,
     CONSTRAINT uq_me_gusta UNIQUE (usuario_id, inmueble_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -128,30 +153,31 @@ Archivo: `me_gusta_salida.json`
 ```
 
 ### Diagrama ERD
-Archivo: `diagrama_ERD.png`
+Archivo: `diagrama_ERD_Final.png`
 ```text
-usuarios
-+----+---------+
-| id | nombre  |
-+----+---------+
+auth_user
++----+------------+---------------------+--------------+--------------+-------------+------------+----------------------+----------+----------+---------------------+
+| id | password   | last_login          | is_superuser | username     | first_name  | last_name  | email                | is_staff | is_active| date_joined         |
++----+------------+---------------------+--------------+--------------+-------------+------------+----------------------+----------+----------+---------------------+
     |
     | 1
     |
     | N
 me_gusta
 +----+------------+------------+---------------------+
-| id | usuario_id  | inmueble_id | fecha_creacion     |
+| id | usuario_id | inmueble_id| fecha_creacion      |
 +----+------------+------------+---------------------+
     |
     | N
     |
     | 1
-inmuebles
-+----+------------+
-| id | direccion  |
-+----+------------+
+property
++----+-------------------+-----------+---------------+---------------------+------+
+| id | address           | city      | price         | description         | year |
++----+-------------------+-----------+---------------+---------------------+------+
+
 ```
-![Diagrama ERD](microservicio_me_gusta/diagrama_ERD.png)
+![Diagrama ERD](microservicio_me_gusta/diagrama_ERD_Final.png)
 
 ### Decisión de diseño
 1. Tabla independiente `me_gusta` para registrar la relación N:M.
