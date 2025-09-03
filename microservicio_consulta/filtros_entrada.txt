@@ -1,4 +1,4 @@
-# Vamos a crear un archivo .txt que explique los parámetros y diferentes invocaciones del servicio.
+# Descripción de los parámetros y diferentes invocaciones del servicio.
 
 contenido = """\
 Servicio REST: consultar_inmuebles
