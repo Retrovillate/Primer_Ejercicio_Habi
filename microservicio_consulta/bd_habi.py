@@ -21,6 +21,7 @@ class BaseDeDatos:
         """
         Obtiene propiedades con su último estado disponible,
         aplicando filtros opcionales por ciudad, año de construcción y estado.
+        Si no se envía estado, filtra por ESTADOS_VALIDOS por defecto.
         """
         # --- Validaciones de tipos ---
         if 'ciudad' in filtros and filtros['ciudad'] is not None and not isinstance(filtros['ciudad'], str):
@@ -32,6 +33,8 @@ class BaseDeDatos:
         if 'estado' in filtros and filtros['estado'] is not None:
             if not isinstance(filtros['estado'], list):
                 raise TypeError("El filtro 'estado' debe ser una lista")
+            if len(filtros['estado']) == 0:
+                raise ValueError("La lista de estados no puede estar vacía")
             for est in filtros['estado']:
                 if est not in ESTADOS_VALIDOS:
                     raise ValueError(f"Estado inválido: {est}. Debe ser uno de {ESTADOS_VALIDOS}")
@@ -89,9 +92,15 @@ class BaseDeDatos:
                 valores.append(filtros['ano_construccion'])
 
             if 'estado' in filtros and filtros['estado']:
+                # Si el usuario envía estados válidos, usar esos
                 placeholders = ", ".join(["%s"] * len(filtros['estado']))
                 filtros_sql.append(f"st.name IN ({placeholders})")
                 valores.extend(filtros['estado'])
+            else:
+                # Si no se envía estado, usar los estados por defecto
+                placeholders = ", ".join(["%s"] * len(ESTADOS_VALIDOS))
+                filtros_sql.append(f"st.name IN ({placeholders})")
+                valores.extend(ESTADOS_VALIDOS)
 
             # Agregar filtros a la consulta si existen
             if filtros_sql:
