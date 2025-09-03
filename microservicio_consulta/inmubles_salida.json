@@ -1,0 +1,22 @@
+{
+    "inmuebles": [
+        {
+            "direccion": "calle 23 #45-67",
+            "ciudad": "medellin",
+            "estado": "pre_venta",
+            "descripcion_estado": "Inmueble publicado en preventa",
+            "precio_venta": 210000000,
+            "ano_construccion": 2002,
+            "fecha_actualizacion": "2021-04-12 22:23:56"
+        },
+        {
+            "direccion": "calle 23 #45-67r",
+            "ciudad": "medellin",
+            "estado": "pre_venta",
+            "descripcion_estado": "Inmueble publicado en preventa",
+            "precio_venta": 210000000,
+            "ano_construccion": 2002,
+            "fecha_actualizacion": "2021-04-10 13:24:56"
+        }
+    ]
+}
